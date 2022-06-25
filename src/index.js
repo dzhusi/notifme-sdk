@@ -7,13 +7,14 @@ import logger from './util/logger'
 import providerFactory from './providers'
 import strategyProvidersFactory from './strategies/providers'
 // Types
-import type { EmailRequestType, PushRequestType, SmsRequestType, VoiceRequestType, WebpushRequestType, SlackRequestType } from './models/notification-request'
+import type { EmailRequestType, PushRequestType, SmsRequestType, VoiceRequestType, WebpushRequestType, SlackRequestType, WebsocketRequestType } from './models/notification-request'
 import type { EmailProviderType } from './models/provider-email'
 import type { PushProviderType } from './models/provider-push'
 import type { SmsProviderType } from './models/provider-sms'
 import type { VoiceProviderType } from './models/provider-voice'
 import type { WebpushProviderType } from './models/provider-webpush'
 import type { SlackProviderType } from './models/provider-slack'
+import type { WebsocketProviderType } from './models/provider-websocket';
 import type SenderType from './sender'
 
 export const CHANNELS = {
@@ -22,7 +23,8 @@ export const CHANNELS = {
   sms: 'sms',
   voice: 'voice',
   webpush: 'webpush',
-  slack: 'slack'
+  slack: 'slack',
+  websocket: 'websocket',
 }
 export type ChannelType = $Keys<typeof CHANNELS>
 
@@ -36,7 +38,8 @@ export type NotificationRequestType = {
   sms?: SmsRequestType,
   voice?: VoiceRequestType,
   webpush?: WebpushRequestType,
-  slack?: SlackRequestType
+  slack?: SlackRequestType,
+  websocket: WebsocketRequestType
   // TODO?: other channels (messenger, skype, telegram, kik, spark...)
 }
 
@@ -76,6 +79,10 @@ export type OptionsType = {|
     },
     slack?: {
       providers: SlackProviderType[],
+      multiProviderStrategy?: ProviderStrategyType
+    },
+    websocket?: {
+      providers: WebsocketProviderType[],
       multiProviderStrategy?: ProviderStrategyType
     }
   },
@@ -135,6 +142,11 @@ export default class NotifmeSdk {
             providers: [],
             multiProviderStrategy: 'fallback',
             ...(channels ? channels.slack : null)
+          },
+          websocket: {
+            providers: [],
+            multiProviderStrategy: 'fallback',
+            ...(channels ? channels.websocket : null)
           }
         }
     }

@@ -168,4 +168,15 @@ export type SlackRequestType = RequestMetadataType & {
   customize?: (string, SlackRequestType) => Promise<SlackRequestType>
 }
 
-export type RequestType = EmailRequestType | PushRequestType | SmsRequestType | VoiceRequestType | WebpushRequestType | SlackRequestType
+export type WebsocketRequestType = RequestMetadataType & {
+  api: {
+    url: string,
+    key: string,
+    secret: string,
+  },
+  channel: string,
+  body: string,
+  customize?: (string, WebsocketRequestType) => Promise<WebsocketRequestType>
+}
+
+export type RequestType = EmailRequestType | PushRequestType | SmsRequestType | VoiceRequestType | WebpushRequestType | SlackRequestType | WebsocketRequestType
